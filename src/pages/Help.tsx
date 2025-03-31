@@ -7,6 +7,10 @@ import {
   MagnifyingGlassIcon,
   ChatBubbleLeftIcon,
   EnvelopeIcon,
+  TicketIcon,
+  CalendarIcon,
+  UserIcon,
+  CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
 
 interface FAQItem {
@@ -41,7 +45,7 @@ const popularTopics = [
   { title: "Buying Tickets", icon: TicketIcon },
   { title: "Creating Events", icon: CalendarIcon },
   { title: "Account Settings", icon: UserIcon },
-  { title: "Payments & Refunds", icon: CurrencyNairaIcon },
+  { title: "Payments & Refunds", icon: CurrencyDollarIcon },
 ];
 
 export default function Help() {

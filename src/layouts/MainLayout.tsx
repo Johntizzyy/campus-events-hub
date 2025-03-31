@@ -1,8 +1,9 @@
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Bars3Icon, XMarkIcon, UserIcon } from "@heroicons/react/24/outline";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -15,6 +16,13 @@ const navigation = [
 
 export default function MainLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -52,12 +60,37 @@ export default function MainLayout() {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Link
-              to="/dashboard"
-              className="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
-            >
-              Dashboard
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/signin"
+                  className="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </nav>
         <Dialog
@@ -98,13 +131,40 @@ export default function MainLayout() {
                   ))}
                 </div>
                 <div className="py-6">
-                  <Link
-                    to="/dashboard"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
+                  {isAuthenticated ? (
+                    <>
+                      <Link
+                        to="/dashboard"
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Dashboard
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7"
+                      >
+                        Sign Out
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/signin"
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        to="/signup"
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign Up
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
