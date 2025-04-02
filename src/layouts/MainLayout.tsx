@@ -10,11 +10,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 const navigation = [
-  { name: "Discover events", href: "/events" },
-  { name: "How It Works", href: "/about" },
-  { name: "Pricing", href: "/pricing" },
+  { name: "Home", href: "/" },
+  { name: "Events", href: "/events" },
   { name: "About", href: "/about" },
-  { name: "Blog", href: "/blog" },
+  { name: "Pricing", href: "/pricing" },
 ];
 
 export default function MainLayout() {

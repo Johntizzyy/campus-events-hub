@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 
 // Layouts
-import MainLayout from "./layouts/MainLayout";
+import MainLayout from "./components/layout/MainLayout";
 
 // Pages
 import Home from "./pages/Home";
@@ -13,7 +13,6 @@ import EventListings from "./pages/EventListings";
 import EventDetails from "./pages/EventDetails";
 import TicketPurchase from "./pages/TicketPurchase";
 import PostEvent from "./pages/PostEvent";
-import Promotions from "./pages/Promotions";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
@@ -67,7 +66,6 @@ function App() {
                 }
               />
               <Route path="events/success" element={<Success />} />
-              <Route path="promotions" element={<Promotions />} />
               <Route path="admin" element={<AdminDashboard />} />
               <Route path="about" element={<About />} />
               <Route path="help" element={<Help />} />
