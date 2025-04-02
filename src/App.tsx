@@ -24,6 +24,7 @@ import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { AuthProvider } from "./contexts/AuthContext";
+import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
 
@@ -71,6 +72,7 @@ function App() {
               <Route path="about" element={<About />} />
               <Route path="help" element={<Help />} />
               <Route path="terms" element={<Terms />} />
+              <Route path="pricing" element={<Pricing />} />
             </Route>
           </Routes>
         </Router>
