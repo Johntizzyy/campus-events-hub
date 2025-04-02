@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { MagnifyingGlassIcon, FunnelIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const categories = [
   { name: "All", href: "#" },
@@ -49,6 +50,8 @@ export default function EventListings() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("Newest");
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   // Filter events based on search query and selected category
   const filteredEvents = useMemo(() => {
@@ -73,8 +76,17 @@ export default function EventListings() {
       });
   }, [searchQuery, selectedCategory, sortBy]);
 
+  const handleLoadMore = () => {
+    if (!currentUser) {
+      navigate("/signin");
+      return;
+    }
+    // Handle loading more events here
+    // This will be implemented when we have actual pagination
+  };
+
   return (
-    <div className="min-h-screen bg-white py-8">
+    <div className="min-h-screen bg-white py-8 font-roboto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Search Section */}
         <div className="flex justify-between items-center mb-6">
@@ -82,7 +94,7 @@ export default function EventListings() {
             <input
               type="text"
               placeholder="Search events..."
-              className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none"
+              className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none font-roboto"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -92,14 +104,14 @@ export default function EventListings() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="text-sm border border-gray-300 rounded-md py-2 px-3"
+              className="text-sm border border-gray-300 rounded-md py-2 px-3 font-roboto"
             >
               <option>Newest</option>
             </select>
 
             <button
               type="button"
-              className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-roboto"
             >
               Filters
             </button>
@@ -114,7 +126,7 @@ export default function EventListings() {
                 key={category.name}
                 onClick={() => setSelectedCategory(category.name)}
                 className={`
-                  pb-4 text-sm font-medium border-b-2 ${
+                  pb-4 text-sm font-medium border-b-2 font-roboto ${
                     selectedCategory === category.name
                       ? "border-blue-500 text-blue-500"
                       : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -135,22 +147,22 @@ export default function EventListings() {
                 <img
                   src={event.image}
                   alt={event.title}
-                  className="w-full h-48 object-cover rounded-lg"
+                  className="w-full h-64 object-cover rounded-lg"
                 />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-blue-600 group-hover:text-blue-700">
+                <h3 className="text-lg font-medium text-blue-600 group-hover:text-blue-700 font-roboto">
                   {event.title}
                 </h3>
-                <p className="mt-1 text-sm text-gray-600">
+                <p className="mt-1 text-sm text-gray-600 font-roboto">
                   {event.date} • {event.venue}
                 </p>
                 <div className="mt-1 flex items-center justify-between">
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-gray-500 font-roboto">
                     {event.category}
                   </span>
                   <span
-                    className={`text-sm font-medium ${
+                    className={`text-sm font-medium font-roboto ${
                       event.price === 0 ? "text-green-600" : "text-blue-600"
                     }`}
                   >
@@ -164,16 +176,15 @@ export default function EventListings() {
           ))}
         </div>
 
-        {filteredEvents.length > 6 && (
-          <div className="mt-8 text-center">
-            <button
-              type="button"
-              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium"
-            >
-              Load More Events
-            </button>
-          </div>
-        )}
+        <div className="my-16 text-center">
+          <button
+            onClick={handleLoadMore}
+            type="button"
+            className="px-8 py-3 border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white rounded-md text-sm font-medium transition-all duration-200 font-roboto"
+          >
+            Load More Events
+          </button>
+        </div>
       </div>
     </div>
   );
