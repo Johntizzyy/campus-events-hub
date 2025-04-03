@@ -10,6 +10,10 @@ import {
   MoonIcon,
   Bars3Icon,
   XMarkIcon,
+  CalendarIcon,
+  CurrencyDollarIcon,
+  QrCodeIcon,
+  MegaphoneIcon,
 } from "@heroicons/react/24/outline";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -26,7 +30,11 @@ export default function AuthenticatedLayout({
 
   const navigation = [
     { name: "Home", href: "/home", icon: HomeIcon },
-    { name: "Dashboard", href: "/dashboard", icon: TicketIcon },
+    { name: "Events", href: "/events", icon: CalendarIcon },
+    { name: "My Events", href: "/my-events", icon: TicketIcon },
+    { name: "My Tickets", href: "/my-tickets", icon: QrCodeIcon },
+    { name: "Earnings", href: "/earnings", icon: CurrencyDollarIcon },
+    { name: "Promotions", href: "/promotions", icon: MegaphoneIcon },
     { name: "Profile", href: "/profile", icon: UserIcon },
     { name: "Post Event", href: "/post-event", icon: PlusCircleIcon },
   ];
@@ -74,7 +82,7 @@ export default function AuthenticatedLayout({
           </button>
         </div>
 
-        <nav className="mt-5 px-2">
+        <nav className="mt-5 px-2 space-y-1">
           {navigation.map((item) => (
             <Link
               key={item.name}
@@ -143,7 +151,7 @@ export default function AuthenticatedLayout({
               </div>
             </div>
 
-            <div className="ml-4 flex items-center md:ml-6">
+            <div className="ml-4 flex items-center md:ml-6 space-x-4">
               <button
                 type="button"
                 className="relative rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:hover:text-gray-300"
@@ -154,7 +162,7 @@ export default function AuthenticatedLayout({
                 <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500" />
               </button>
 
-              <div className="relative ml-3">
+              <div className="relative">
                 <div className="flex items-center">
                   <img
                     className="h-8 w-8 rounded-full"

@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Outlet,
+  Navigate,
 } from "react-router-dom";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -28,11 +29,22 @@ import Terms from "./pages/Terms";
 import Success from "./pages/Success";
 import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Pricing from "./pages/Pricing";
+import Events from "./pages/Events";
+import MyEvents from "./pages/MyEvents";
+import MyTickets from "./pages/MyTickets";
+import Earnings from "./pages/Earnings";
+import Promotions from "./pages/Promotions";
+import Notifications from "./pages/Notifications";
+import EventCheckIn from "./pages/EventCheckIn";
 
 const queryClient = new QueryClient();
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/signin" />;
+}
 
 function App() {
   return (
@@ -69,6 +81,13 @@ function App() {
               <Route path="/post-event" element={<PostEvent />} />
               <Route path="/events/success" element={<Success />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="events" element={<Events />} />
+              <Route path="my-events" element={<MyEvents />} />
+              <Route path="my-tickets" element={<MyTickets />} />
+              <Route path="earnings" element={<Earnings />} />
+              <Route path="promotions" element={<Promotions />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="check-in" element={<EventCheckIn />} />
             </Route>
           </Routes>
         </Router>
