@@ -33,6 +33,12 @@ const faqs: FAQItem[] = [
     category: "events",
   },
   {
+    question: "Can I post events for free",
+    answer:
+      "Yes, Campus Event Hub provide free plan which allows posting of events without paying a fee",
+    category: "events",
+  },
+  {
     question: "What payment methods are accepted?",
     answer:
       "We accept debit/credit cards and bank transfers. All payments are processed securely through our payment partners.",

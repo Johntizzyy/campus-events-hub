@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -11,12 +12,13 @@ export default function SignIn() {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Add authentication logic here
-      navigate("/dashboard");
+      await login(formData.email, formData.password);
+      navigate("/home");
     } catch (err) {
       setError("Invalid email or password");
     }
