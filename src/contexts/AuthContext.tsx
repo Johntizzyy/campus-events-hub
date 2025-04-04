@@ -4,6 +4,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  photoUrl?: string;
 }
 
 interface AuthContextType {
@@ -40,6 +41,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         id: "1",
         name: "Test User",
         email: email,
+        photoUrl: "https://ui-avatars.com/api/?name=Test+User",
       });
       setIsAuthenticated(true);
     } catch (error) {
@@ -60,6 +62,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         id: "1",
         name: name,
         email: email,
+        photoUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          name
+        )}`,
       });
       setIsAuthenticated(true);
     } catch (error) {

@@ -16,6 +16,7 @@ import {
   MegaphoneIcon,
 } from "@heroicons/react/24/outline";
 import { useAuth } from "../contexts/AuthContext";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 export default function AuthenticatedLayout({
   children,
@@ -23,20 +24,20 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const { currentUser, logout } = useAuth();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const { user: currentUser, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
   const navigation = [
-    { name: "Home", href: "/home", icon: HomeIcon },
-    { name: "Events", href: "/events", icon: CalendarIcon },
-    { name: "My Events", href: "/my-events", icon: TicketIcon },
-    { name: "My Tickets", href: "/my-tickets", icon: QrCodeIcon },
-    { name: "Earnings", href: "/earnings", icon: CurrencyDollarIcon },
-    { name: "Promotions", href: "/promotions", icon: MegaphoneIcon },
-    { name: "Profile", href: "/profile", icon: UserIcon },
-    { name: "Post Event", href: "/post-event", icon: PlusCircleIcon },
+    { name: "Home", href: "home", icon: HomeIcon },
+    { name: "Events", href: "events", icon: CalendarIcon },
+    { name: "My Events", href: "my-events", icon: TicketIcon },
+    { name: "My Tickets", href: "my-tickets", icon: QrCodeIcon },
+    { name: "Earnings", href: "earnings", icon: CurrencyDollarIcon },
+    { name: "Promotions", href: "promotions", icon: MegaphoneIcon },
+    { name: "Profile", href: "profile", icon: UserIcon },
+    { name: "Post Event", href: "post-event", icon: PlusCircleIcon },
   ];
 
   const handleLogout = async () => {
@@ -83,31 +84,42 @@ export default function AuthenticatedLayout({
         </div>
 
         <nav className="mt-5 px-2 space-y-1">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              to={item.href}
-              className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                location.pathname === item.href
-                  ? "bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
-              }`}
-            >
-              <item.icon
-                className={`mr-3 h-5 w-5 ${
-                  location.pathname === item.href
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300"
+          {navigation.map((item) => {
+            // Extract the path without the basename for comparison
+            const currentPath = location.pathname.replace(
+              "/campus-events-hub/",
+              ""
+            );
+            const isActive =
+              currentPath === item.href ||
+              currentPath.startsWith(`${item.href}/`);
+
+            return (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                  isActive
+                    ? "bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                 }`}
-              />
-              {item.name}
-            </Link>
-          ))}
+              >
+                <item.icon
+                  className={`mr-3 h-5 w-5 ${
+                    isActive
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-300"
+                  }`}
+                />
+                {item.name}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-gray-200 dark:border-gray-700">
           <button
-            onClick={() => setIsDarkMode(!isDarkMode)}
+            onClick={toggleDarkMode}
             className="flex items-center w-full px-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
           >
             {isDarkMode ? (
@@ -167,13 +179,13 @@ export default function AuthenticatedLayout({
                   <img
                     className="h-8 w-8 rounded-full"
                     src={
-                      currentUser?.photoURL ||
+                      currentUser?.photoUrl ||
                       "https://ui-avatars.com/api/?name=User"
                     }
                     alt=""
                   />
                   <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {currentUser?.displayName || "User"}
+                    {currentUser?.name || "User"}
                   </span>
                 </div>
               </div>

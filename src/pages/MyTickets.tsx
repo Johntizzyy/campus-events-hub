@@ -4,6 +4,7 @@ import {
   CalendarIcon,
   MapPinIcon,
 } from "@heroicons/react/24/outline";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 const tickets = [
   {
@@ -46,13 +47,18 @@ const tickets = [
 
 export default function MyTickets() {
   const [selectedTicket, setSelectedTicket] = useState<number | null>(null);
+  const { isDarkMode } = useDarkMode();
 
   return (
-    <div className="bg-white">
+    <div className={`${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col space-y-6 py-8">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h1
+              className={`text-3xl font-bold tracking-tight ${
+                isDarkMode ? "text-white" : "text-gray-900"
+              }`}
+            >
               My Tickets
             </h1>
           </div>
@@ -61,17 +67,27 @@ export default function MyTickets() {
             {tickets.map((ticket) => (
               <div
                 key={ticket.id}
-                className="group relative overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:shadow-xl"
+                className={`group relative overflow-hidden rounded-lg ${
+                  isDarkMode ? "bg-gray-800" : "bg-white"
+                } shadow-lg transition-all duration-300 hover:shadow-xl`}
               >
                 <div className="p-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3
+                      className={`text-lg font-semibold ${
+                        isDarkMode ? "text-white" : "text-gray-900"
+                      }`}
+                    >
                       {ticket.eventTitle}
                     </h3>
                     <span
                       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                         ticket.status === "valid"
-                          ? "bg-green-100 text-green-800"
+                          ? isDarkMode
+                            ? "bg-green-900 text-green-100"
+                            : "bg-green-100 text-green-800"
+                          : isDarkMode
+                          ? "bg-gray-700 text-gray-300"
                           : "bg-gray-100 text-gray-800"
                       }`}
                     >
@@ -80,19 +96,35 @@ export default function MyTickets() {
                   </div>
 
                   <div className="mt-4 space-y-2">
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div
+                      className={`flex items-center text-sm ${
+                        isDarkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {ticket.date} at {ticket.time}
                     </div>
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div
+                      className={`flex items-center text-sm ${
+                        isDarkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
                       <MapPinIcon className="mr-2 h-4 w-4" />
                       {ticket.venue}
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500">
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-400" : "text-gray-500"
+                        }
+                      >
                         Ticket #{ticket.ticketNumber}
                       </span>
-                      <span className="font-medium text-gray-900">
+                      <span
+                        className={`font-medium ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
                         {ticket.price === 0
                           ? "Free"
                           : `₦${ticket.price.toLocaleString()}`}

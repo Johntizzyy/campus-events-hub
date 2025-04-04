@@ -30,6 +30,7 @@ import Success from "./pages/Success";
 import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { DarkModeProvider } from "./contexts/DarkModeContext";
 import Pricing from "./pages/Pricing";
 import Events from "./pages/Events";
 import MyEvents from "./pages/MyEvents";
@@ -49,50 +50,53 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <Router basename="/campus-events-hub">
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<Home />} />
-              <Route path="events" element={<EventListings />} />
-              <Route path="events/:id" element={<EventDetails />} />
-              <Route path="signin" element={<SignIn />} />
-              <Route path="signup" element={<SignUp />} />
-              <Route path="about" element={<About />} />
-              <Route path="help" element={<Help />} />
-              <Route path="terms" element={<Terms />} />
-              <Route path="pricing" element={<Pricing />} />
-            </Route>
+      <DarkModeProvider>
+        <QueryClientProvider client={queryClient}>
+          <Router basename="/campus-events-hub">
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<MainLayout />}>
+                <Route index element={<Home />} />
+                <Route path="events" element={<EventListings />} />
+                <Route path="events/:id" element={<EventDetails />} />
+                <Route path="signin" element={<SignIn />} />
+                <Route path="signup" element={<SignUp />} />
+                <Route path="about" element={<About />} />
+                <Route path="help" element={<Help />} />
+                <Route path="terms" element={<Terms />} />
+                <Route path="pricing" element={<Pricing />} />
+              </Route>
 
-            {/* Protected Routes */}
-            <Route
-              element={
-                <ProtectedRoute>
-                  <AuthenticatedLayout>
-                    <Outlet />
-                  </AuthenticatedLayout>
-                </ProtectedRoute>
-              }
-            >
-              <Route path="/home" element={<AuthenticatedHome />} />
-              <Route path="/dashboard" element={<UserDashboard />} />
-              <Route path="/tickets/:eventId" element={<TicketPurchase />} />
-              <Route path="/post-event" element={<PostEvent />} />
-              <Route path="/events/success" element={<Success />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="events" element={<Events />} />
-              <Route path="my-events" element={<MyEvents />} />
-              <Route path="my-tickets" element={<MyTickets />} />
-              <Route path="earnings" element={<Earnings />} />
-              <Route path="promotions" element={<Promotions />} />
-              <Route path="notifications" element={<Notifications />} />
-              <Route path="check-in" element={<EventCheckIn />} />
-            </Route>
-          </Routes>
-        </Router>
-        <Toaster position="top-right" />
-      </QueryClientProvider>
+              {/* Protected Routes */}
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <AuthenticatedLayout>
+                      <Outlet />
+                    </AuthenticatedLayout>
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="home" element={<AuthenticatedHome />} />
+                <Route path="dashboard" element={<UserDashboard />} />
+                <Route path="tickets/:eventId" element={<TicketPurchase />} />
+                <Route path="post-event" element={<PostEvent />} />
+                <Route path="events/success" element={<Success />} />
+                <Route path="admin" element={<AdminDashboard />} />
+                <Route path="events" element={<Events />} />
+                <Route path="my-events" element={<MyEvents />} />
+                <Route path="my-tickets" element={<MyTickets />} />
+                <Route path="earnings" element={<Earnings />} />
+                <Route path="promotions" element={<Promotions />} />
+                <Route path="notifications" element={<Notifications />} />
+                <Route path="check-in" element={<EventCheckIn />} />
+                <Route path="profile" element={<UserDashboard />} />
+              </Route>
+            </Routes>
+          </Router>
+          <Toaster position="top-right" />
+        </QueryClientProvider>
+      </DarkModeProvider>
     </AuthProvider>
   );
 }

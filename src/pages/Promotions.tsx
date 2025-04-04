@@ -5,6 +5,7 @@ import {
   ChartBarIcon,
   ArrowTrendingUpIcon,
 } from "@heroicons/react/24/outline";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 const promotions = [
   {
@@ -87,13 +88,18 @@ export default function Promotions() {
     null
   );
   const [showPromotionTypes, setShowPromotionTypes] = useState(false);
+  const { isDarkMode } = useDarkMode();
 
   return (
-    <div className="bg-white">
+    <div className={`${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col space-y-6 py-8">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h1
+              className={`text-3xl font-bold tracking-tight ${
+                isDarkMode ? "text-white" : "text-gray-900"
+              }`}
+            >
               Promotions
             </h1>
             <button
@@ -106,18 +112,30 @@ export default function Promotions() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-lg bg-white p-6 shadow">
+            <div
+              className={`rounded-lg ${
+                isDarkMode ? "bg-gray-800" : "bg-white"
+              } p-6 shadow`}
+            >
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <CurrencyDollarIcon className="h-6 w-6 text-blue-600" />
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
+                    <dt
+                      className={`text-sm font-medium ${
+                        isDarkMode ? "text-gray-400" : "text-gray-500"
+                      } truncate`}
+                    >
                       Total Budget
                     </dt>
                     <dd className="flex items-baseline">
-                      <div className="text-2xl font-semibold text-gray-900">
+                      <div
+                        className={`text-2xl font-semibold ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
                         ₦
                         {promotions
                           .reduce((sum, p) => sum + p.budget, 0)
@@ -129,18 +147,30 @@ export default function Promotions() {
               </div>
             </div>
 
-            <div className="rounded-lg bg-white p-6 shadow">
+            <div
+              className={`rounded-lg ${
+                isDarkMode ? "bg-gray-800" : "bg-white"
+              } p-6 shadow`}
+            >
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <ArrowTrendingUpIcon className="h-6 w-6 text-green-600" />
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
+                    <dt
+                      className={`text-sm font-medium ${
+                        isDarkMode ? "text-gray-400" : "text-gray-500"
+                      } truncate`}
+                    >
                       Total Impressions
                     </dt>
                     <dd className="flex items-baseline">
-                      <div className="text-2xl font-semibold text-gray-900">
+                      <div
+                        className={`text-2xl font-semibold ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
                         {promotions
                           .reduce((sum, p) => sum + p.impressions, 0)
                           .toLocaleString()}
@@ -151,18 +181,30 @@ export default function Promotions() {
               </div>
             </div>
 
-            <div className="rounded-lg bg-white p-6 shadow">
+            <div
+              className={`rounded-lg ${
+                isDarkMode ? "bg-gray-800" : "bg-white"
+              } p-6 shadow`}
+            >
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <ArrowTrendingUpIcon className="h-6 w-6 text-purple-600" />
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
+                    <dt
+                      className={`text-sm font-medium ${
+                        isDarkMode ? "text-gray-400" : "text-gray-500"
+                      } truncate`}
+                    >
                       Total Clicks
                     </dt>
                     <dd className="flex items-baseline">
-                      <div className="text-2xl font-semibold text-gray-900">
+                      <div
+                        className={`text-2xl font-semibold ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
                         {promotions
                           .reduce((sum, p) => sum + p.clicks, 0)
                           .toLocaleString()}
@@ -173,18 +215,30 @@ export default function Promotions() {
               </div>
             </div>
 
-            <div className="rounded-lg bg-white p-6 shadow">
+            <div
+              className={`rounded-lg ${
+                isDarkMode ? "bg-gray-800" : "bg-white"
+              } p-6 shadow`}
+            >
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <ChartBarIcon className="h-6 w-6 text-yellow-600" />
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
+                    <dt
+                      className={`text-sm font-medium ${
+                        isDarkMode ? "text-gray-400" : "text-gray-500"
+                      } truncate`}
+                    >
                       Total Conversions
                     </dt>
                     <dd className="flex items-baseline">
-                      <div className="text-2xl font-semibold text-gray-900">
+                      <div
+                        className={`text-2xl font-semibold ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
                         {promotions
                           .reduce((sum, p) => sum + p.conversions, 0)
                           .toLocaleString()}
@@ -197,82 +251,144 @@ export default function Promotions() {
           </div>
 
           <div className="mt-8">
-            <h2 className="text-lg font-medium text-gray-900">
+            <h2
+              className={`text-lg font-medium ${
+                isDarkMode ? "text-white" : "text-gray-900"
+              }`}
+            >
               Active Promotions
             </h2>
-            <div className="mt-4 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+            <div
+              className={`mt-4 overflow-hidden shadow ring-1 ${
+                isDarkMode ? "ring-gray-700" : "ring-black ring-opacity-5"
+              } sm:rounded-lg`}
+            >
               <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50">
+                <thead className={isDarkMode ? "bg-gray-800" : "bg-gray-50"}>
                   <tr>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      className={`py-3.5 pl-4 pr-3 text-left text-sm font-semibold ${
+                        isDarkMode ? "text-gray-300" : "text-gray-900"
+                      } sm:pl-6`}
                     >
                       Event
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className={`px-3 py-3.5 text-left text-sm font-semibold ${
+                        isDarkMode ? "text-gray-300" : "text-gray-900"
+                      }`}
                     >
                       Duration
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className={`px-3 py-3.5 text-left text-sm font-semibold ${
+                        isDarkMode ? "text-gray-300" : "text-gray-900"
+                      }`}
                     >
                       Budget
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className={`px-3 py-3.5 text-left text-sm font-semibold ${
+                        isDarkMode ? "text-gray-300" : "text-gray-900"
+                      }`}
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      className={`px-3 py-3.5 text-left text-sm font-semibold ${
+                        isDarkMode ? "text-gray-300" : "text-gray-900"
+                      }`}
                     >
                       Performance
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody
+                  className={`divide-y ${
+                    isDarkMode
+                      ? "divide-gray-700 bg-gray-800"
+                      : "divide-gray-200 bg-white"
+                  }`}
+                >
                   {promotions.map((promotion) => (
                     <tr key={promotion.id}>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                      <td
+                        className={`whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        } sm:pl-6`}
+                      >
                         {promotion.eventTitle}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <td
+                        className={`whitespace-nowrap px-3 py-4 text-sm ${
+                          isDarkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
                         {promotion.startDate} to {promotion.endDate}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <td
+                        className={`whitespace-nowrap px-3 py-4 text-sm ${
+                          isDarkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
                         ₦{promotion.budget.toLocaleString()}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm">
                         <span
                           className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                             promotion.status === "active"
-                              ? "bg-green-100 text-green-800"
+                              ? isDarkMode
+                                ? "bg-green-900 text-green-100"
+                                : "bg-green-100 text-green-800"
+                              : isDarkMode
+                              ? "bg-gray-700 text-gray-300"
                               : "bg-gray-100 text-gray-800"
                           }`}
                         >
-                          {promotion.status === "active"
-                            ? "Active"
-                            : "Completed"}
+                          {promotion.status}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        <div className="flex flex-col">
-                          <span>
-                            Impressions:{" "}
-                            {promotion.impressions.toLocaleString()}
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                        <div className="flex items-center space-x-2">
+                          <span
+                            className={`${
+                              isDarkMode ? "text-gray-400" : "text-gray-500"
+                            }`}
+                          >
+                            {promotion.impressions.toLocaleString()} impressions
                           </span>
-                          <span>
-                            Clicks: {promotion.clicks.toLocaleString()}
+                          <span
+                            className={`${
+                              isDarkMode ? "text-gray-400" : "text-gray-500"
+                            }`}
+                          >
+                            •
                           </span>
-                          <span>
-                            Conversions:{" "}
-                            {promotion.conversions.toLocaleString()}
+                          <span
+                            className={`${
+                              isDarkMode ? "text-gray-400" : "text-gray-500"
+                            }`}
+                          >
+                            {promotion.clicks.toLocaleString()} clicks
+                          </span>
+                          <span
+                            className={`${
+                              isDarkMode ? "text-gray-400" : "text-gray-500"
+                            }`}
+                          >
+                            •
+                          </span>
+                          <span
+                            className={`${
+                              isDarkMode ? "text-gray-400" : "text-gray-500"
+                            }`}
+                          >
+                            {promotion.conversions.toLocaleString()} conversions
                           </span>
                         </div>
                       </td>

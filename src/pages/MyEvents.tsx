@@ -8,6 +8,7 @@ import {
   TrashIcon,
   QrCodeIcon,
 } from "@heroicons/react/24/outline";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 const myEvents = [
   {
@@ -42,6 +43,7 @@ const myEvents = [
 
 export default function MyEvents() {
   const [selectedEvent, setSelectedEvent] = useState<number | null>(null);
+  const { isDarkMode } = useDarkMode();
 
   const handleDelete = (eventId: number) => {
     // Add delete functionality here
@@ -54,11 +56,15 @@ export default function MyEvents() {
   };
 
   return (
-    <div className="bg-white">
+    <div className={`${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col space-y-6 py-8">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h1
+              className={`text-3xl font-bold tracking-tight ${
+                isDarkMode ? "text-white" : "text-gray-900"
+              }`}
+            >
               My Events
             </h1>
             <Link
@@ -73,7 +79,9 @@ export default function MyEvents() {
             {myEvents.map((event) => (
               <div
                 key={event.id}
-                className="group relative overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:shadow-xl"
+                className={`group relative overflow-hidden rounded-lg ${
+                  isDarkMode ? "bg-gray-800" : "bg-white"
+                } shadow-lg transition-all duration-300 hover:shadow-xl`}
               >
                 <div className="aspect-w-16 aspect-h-9">
                   <img
@@ -91,7 +99,11 @@ export default function MyEvents() {
                 </div>
                 <div className="p-6">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-500">
+                    <span
+                      className={`text-sm font-medium ${
+                        isDarkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
                       {event.category}
                     </span>
                     <span className="text-lg font-bold text-blue-600">
@@ -100,24 +112,52 @@ export default function MyEvents() {
                         : `₦${event.price.toLocaleString()}`}
                     </span>
                   </div>
-                  <div className="mt-2 flex items-center text-sm text-gray-500">
+                  <div
+                    className={`mt-2 flex items-center text-sm ${
+                      isDarkMode ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
                     <MapPinIcon className="mr-1 h-4 w-4" />
                     {event.venue}
                   </div>
                   <div className="mt-4 grid grid-cols-2 gap-4">
-                    <div className="rounded-lg bg-gray-50 p-4">
-                      <p className="text-sm font-medium text-gray-500">
+                    <div
+                      className={`rounded-lg ${
+                        isDarkMode ? "bg-gray-700" : "bg-gray-50"
+                      } p-4`}
+                    >
+                      <p
+                        className={`text-sm font-medium ${
+                          isDarkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
                         Tickets Sold
                       </p>
-                      <p className="mt-1 text-2xl font-semibold text-gray-900">
+                      <p
+                        className={`mt-1 text-2xl font-semibold ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
                         {event.ticketsSold}
                       </p>
                     </div>
-                    <div className="rounded-lg bg-gray-50 p-4">
-                      <p className="text-sm font-medium text-gray-500">
+                    <div
+                      className={`rounded-lg ${
+                        isDarkMode ? "bg-gray-700" : "bg-gray-50"
+                      } p-4`}
+                    >
+                      <p
+                        className={`text-sm font-medium ${
+                          isDarkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
                         Total Revenue
                       </p>
-                      <p className="mt-1 text-2xl font-semibold text-gray-900">
+                      <p
+                        className={`mt-1 text-2xl font-semibold ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                      >
                         ₦{event.totalRevenue.toLocaleString()}
                       </p>
                     </div>
