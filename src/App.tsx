@@ -90,7 +90,6 @@ function App() {
                 <Route path="notifications" element={<Notifications />} />
                 <Route path="check-in" element={<EventCheckIn />} />
                 <Route path="profile" element={<UserDashboard />} />
-                <Route path="events" element={<Events />} />
               </Route>
             </Routes>
           </Router>
