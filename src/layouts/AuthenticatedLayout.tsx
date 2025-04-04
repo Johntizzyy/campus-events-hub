@@ -25,19 +25,19 @@ export default function AuthenticatedLayout({
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isDarkMode, toggleDarkMode } = useDarkMode();
-  const { user: currentUser, logout } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
   const navigation = [
-    { name: "Home", href: "home", icon: HomeIcon },
-    { name: "Events", href: "events", icon: CalendarIcon },
-    { name: "My Events", href: "my-events", icon: TicketIcon },
-    { name: "My Tickets", href: "my-tickets", icon: QrCodeIcon },
-    { name: "Earnings", href: "earnings", icon: CurrencyDollarIcon },
-    { name: "Promotions", href: "promotions", icon: MegaphoneIcon },
-    { name: "Profile", href: "profile", icon: UserIcon },
-    { name: "Post Event", href: "post-event", icon: PlusCircleIcon },
+    { name: "Home", href: "/home", icon: HomeIcon },
+    { name: "Events", href: "/events", icon: CalendarIcon },
+    { name: "My Events", href: "/my-events", icon: TicketIcon },
+    { name: "My Tickets", href: "/my-tickets", icon: QrCodeIcon },
+    { name: "Earnings", href: "/earnings", icon: CurrencyDollarIcon },
+    { name: "Promotions", href: "/promotions", icon: MegaphoneIcon },
+    { name: "Profile", href: "/profile", icon: UserIcon },
+    { name: "Post Event", href: "/post-event", icon: PlusCircleIcon },
   ];
 
   const handleLogout = async () => {
@@ -90,9 +90,12 @@ export default function AuthenticatedLayout({
               "/campus-events-hub/",
               ""
             );
+            const itemPath = item.href.replace("/", "");
             const isActive =
-              currentPath === item.href ||
-              currentPath.startsWith(`${item.href}/`);
+              currentPath === itemPath ||
+              currentPath.startsWith(`${itemPath}/`) ||
+              // Special case for Events page
+              (itemPath === "events" && currentPath === "events");
 
             return (
               <Link
@@ -179,13 +182,12 @@ export default function AuthenticatedLayout({
                   <img
                     className="h-8 w-8 rounded-full"
                     src={
-                      currentUser?.photoUrl ||
-                      "https://ui-avatars.com/api/?name=User"
+                      user?.photoUrl || "https://ui-avatars.com/api/?name=User"
                     }
                     alt=""
                   />
                   <span className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {currentUser?.name || "User"}
+                    {user?.name || "User"}
                   </span>
                 </div>
               </div>

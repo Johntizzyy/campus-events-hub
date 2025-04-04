@@ -57,14 +57,14 @@ function App() {
               {/* Public Routes */}
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Home />} />
-                <Route path="events" element={<EventListings />} />
-                <Route path="events/:id" element={<EventDetails />} />
                 <Route path="signin" element={<SignIn />} />
                 <Route path="signup" element={<SignUp />} />
                 <Route path="about" element={<About />} />
                 <Route path="help" element={<Help />} />
                 <Route path="terms" element={<Terms />} />
                 <Route path="pricing" element={<Pricing />} />
+                <Route path="events" element={<EventListings />} />
+                <Route path="events/:id" element={<EventDetails />} />
               </Route>
 
               {/* Protected Routes */}
@@ -83,7 +83,6 @@ function App() {
                 <Route path="post-event" element={<PostEvent />} />
                 <Route path="events/success" element={<Success />} />
                 <Route path="admin" element={<AdminDashboard />} />
-                <Route path="events" element={<Events />} />
                 <Route path="my-events" element={<MyEvents />} />
                 <Route path="my-tickets" element={<MyTickets />} />
                 <Route path="earnings" element={<Earnings />} />
@@ -91,6 +90,7 @@ function App() {
                 <Route path="notifications" element={<Notifications />} />
                 <Route path="check-in" element={<EventCheckIn />} />
                 <Route path="profile" element={<UserDashboard />} />
+                <Route path="events" element={<Events />} />
               </Route>
             </Routes>
           </Router>

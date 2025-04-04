@@ -30,13 +30,13 @@ export default function Success() {
           className="mt-8 space-y-4"
         >
           <Link
-            to="/events"
+            to="events"
             className="block w-full rounded-md bg-primary-600 px-4 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
           >
             View All Events
           </Link>
           <Link
-            to="/dashboard"
+            to="dashboard"
             className="block w-full rounded-md bg-white dark:bg-gray-800 px-4 py-2.5 text-center text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             Go to Dashboard

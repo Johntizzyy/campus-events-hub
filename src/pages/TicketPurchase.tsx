@@ -56,7 +56,7 @@ export default function TicketPurchase() {
     e.preventDefault();
     // Handle payment processing here
     // For now, just navigate to success page
-    navigate("/tickets/success");
+    navigate("tickets/success");
   };
 
   return (

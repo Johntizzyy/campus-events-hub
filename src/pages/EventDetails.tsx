@@ -245,7 +245,7 @@ export default function EventDetails() {
                 {/* Action Buttons */}
                 <div className="space-y-4">
                   <Link
-                    to={`/tickets/${event.id}`}
+                    to={`tickets/${event.id}`}
                     className="w-full inline-flex justify-center items-center rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
                   >
                     Buy Tickets
@@ -277,7 +277,7 @@ export default function EventDetails() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Link to={`/events/${relatedEvent.id}`} className="group">
+                <Link to={`events/${relatedEvent.id}`} className="group">
                   <div className="relative">
                     <img
                       src={relatedEvent.image}

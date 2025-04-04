@@ -51,7 +51,7 @@ export default function EventListings() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("Newest");
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
 
   // Filter events based on search query and selected category
   const filteredEvents = useMemo(() => {
@@ -77,7 +77,7 @@ export default function EventListings() {
   }, [searchQuery, selectedCategory, sortBy]);
 
   const handleLoadMore = () => {
-    if (!currentUser) {
+    if (!user) {
       navigate("/signin");
       return;
     }
