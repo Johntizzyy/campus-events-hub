@@ -35,33 +35,33 @@ export default function MainLayout() {
         >
           <div className="flex lg:flex-1">
             <Link to="/" className="-m-1.5 p-1.5">
-              <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                Campus Events Hub
+              <span className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                CEH
               </span>
             </Link>
           </div>
-          <div className="flex lg:hidden">
+          <div className="flex items-center">
             <button
               type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-200"
+              className="lg:hidden -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-200"
               onClick={() => setMobileMenuOpen(true)}
             >
               <span className="sr-only">Open main menu</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <div className="hidden lg:flex lg:gap-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100 hover:text-primary-600"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-6 items-center">
+          <div className="hidden lg:flex lg:items-center lg:gap-x-6">
+            <div className="lg:flex lg:gap-x-8">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100 hover:text-primary-600"
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
             <button
               type="button"
               className="p-2 text-gray-700 dark:text-gray-200 hover:text-gray-900"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 
 import { useParams, Link } from "react-router-dom";
@@ -9,7 +9,10 @@ import {
   CalendarIcon,
   ClockIcon,
   UserIcon,
+  UsersIcon,
+  ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
+import { useAuth } from "../contexts/AuthContext";
 
 // Mock data - replace with API call
 const event = {
@@ -61,8 +64,12 @@ const event = {
 
 export default function EventDetails() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [selectedTicket, setSelectedTicket] = useState(event.ticketTypes[0]);
   const [quantity, setQuantity] = useState(1);
+  const [lookingForBuddy, setLookingForBuddy] = useState(false);
+  const [interestedBuddies, setInterestedBuddies] = useState([]);
+  const [showBuddyModal, setShowBuddyModal] = useState(false);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -75,6 +82,53 @@ export default function EventDetails() {
       } catch (error) {
         console.error("Error sharing:", error);
       }
+    }
+  };
+
+  // Mock data for demonstration
+  const mockBuddies = [
+    {
+      id: 1,
+      name: "Alex Smith",
+      interests: ["Music", "Dance"],
+      matchScore: 85,
+      contactPreference: "email",
+      email: "alex.s@example.com",
+      socialMedia: {
+        instagram: "@alexsmith",
+      },
+    },
+    {
+      id: 2,
+      name: "Jordan Lee",
+      interests: ["Tech", "Networking"],
+      matchScore: 75,
+      contactPreference: "phone",
+      phone: "+234 XXX XXXX XXX",
+      socialMedia: {
+        twitter: "@jordanlee",
+      },
+    },
+    {
+      id: 3,
+      name: "Sam Wilson",
+      interests: ["Sports", "Music"],
+      matchScore: 70,
+      contactPreference: "email",
+      email: "sam.w@example.com",
+      socialMedia: {
+        instagram: "@samwilson",
+        facebook: "samwilson",
+      },
+    },
+  ];
+
+  const toggleLookingForBuddy = () => {
+    setLookingForBuddy(!lookingForBuddy);
+    if (!lookingForBuddy) {
+      // In a real implementation, this would fetch actual matches from the backend
+      setInterestedBuddies(mockBuddies);
+      setShowBuddyModal(true);
     }
   };
 
@@ -303,6 +357,134 @@ export default function EventDetails() {
               </motion.div>
             ))}
           </div>
+        </div>
+
+        {/* Event Buddy Feature */}
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <UsersIcon className="h-8 w-8 text-blue-500" />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Looking for an Event Buddy?
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Don't go alone! Find someone to enjoy the event with.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={toggleLookingForBuddy}
+              className={`px-4 py-2 rounded-lg flex items-center space-x-2 ${
+                lookingForBuddy
+                  ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                  : "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+              }`}
+            >
+              <UserIcon className="h-5 w-5" />
+              <span>
+                {lookingForBuddy ? "Looking for Buddy" : "Find a Buddy"}
+              </span>
+            </button>
+          </div>
+
+          {/* Buddy Modal */}
+          {showBuddyModal && (
+            <div className="mt-6 space-y-4">
+              <h4 className="text-md font-medium text-gray-900 dark:text-white">
+                Potential Event Buddies
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {interestedBuddies.map((buddy) => (
+                  <div
+                    key={buddy.id}
+                    className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="space-y-3">
+                      <div>
+                        <h5 className="font-medium text-gray-900 dark:text-white">
+                          {buddy.name}
+                        </h5>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Interests: {buddy.interests.join(", ")}
+                        </p>
+                        <div className="mt-2">
+                          <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                            {buddy.matchScore}% Match
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Contact Information */}
+                      <div className="pt-3 border-t border-gray-200 dark:border-gray-600">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                          Contact via:
+                        </p>
+                        {buddy.contactPreference === "email" && buddy.email && (
+                          <a
+                            href={`mailto:${buddy.email}`}
+                            className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                          >
+                            ✉️ Email
+                          </a>
+                        )}
+                        {buddy.contactPreference === "phone" && buddy.phone && (
+                          <a
+                            href={`tel:${buddy.phone}`}
+                            className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+                          >
+                            📱 Phone
+                          </a>
+                        )}
+                      </div>
+
+                      {/* Social Media Links */}
+                      {buddy.socialMedia && (
+                        <div className="flex gap-2 pt-2">
+                          {buddy.socialMedia.instagram && (
+                            <a
+                              href={`https://instagram.com/${buddy.socialMedia.instagram.replace(
+                                "@",
+                                ""
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-pink-600 hover:text-pink-500 dark:text-pink-400"
+                            >
+                              Instagram
+                            </a>
+                          )}
+                          {buddy.socialMedia.twitter && (
+                            <a
+                              href={`https://twitter.com/${buddy.socialMedia.twitter.replace(
+                                "@",
+                                ""
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:text-blue-500 dark:text-blue-400"
+                            >
+                              Twitter
+                            </a>
+                          )}
+                          {buddy.socialMedia.facebook && (
+                            <a
+                              href={`https://facebook.com/${buddy.socialMedia.facebook}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-800 hover:text-blue-700 dark:text-blue-300"
+                            >
+                              Facebook
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
