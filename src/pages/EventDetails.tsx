@@ -14,69 +14,69 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAuth } from "../contexts/AuthContext";
 
-// Mock data - replace with API call
-const event = {
-  id: 1,
-  title: "Annual Music Festival",
-  date: "2024-04-15",
-  time: "6:00 PM",
-  location: "University Auditorium",
-  image:
-    "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-  price: "₦5,000",
-  category: "Music",
-  description: `Join us for an unforgettable evening of music and entertainment at the Annual Music Festival! 
-  Featuring top student bands, solo artists, and special guest performances. 
-  Don't miss out on this incredible showcase of talent from across campus.`,
-  organizer: {
-    name: "Student Entertainment Committee",
-    contact: "+234 123 456 7890",
-    email: "sec@unilorin.edu.ng",
-  },
-  ticketTypes: [
-    {
-      name: "VIP",
-      price: "₦10,000",
-      description: "Front row seats, meet & greet",
-    },
-    { name: "Regular", price: "₦5,000", description: "Standard seating" },
-    { name: "Early Bird", price: "₦3,000", description: "Limited time offer" },
-  ],
-  relatedEvents: [
-    {
-      id: 2,
-      title: "Jazz Night",
-      date: "2024-04-20",
-      image:
-        "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-      price: "₦3,000",
-    },
-    {
-      id: 3,
-      title: "Acoustic Session",
-      date: "2024-04-25",
-      image:
-        "https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-      price: "₦2,000",
-    },
-  ],
-};
+// Import events data
+import { events } from "./Events";
 
 export default function EventDetails() {
   const { id } = useParams();
   const { user } = useAuth();
-  const [selectedTicket, setSelectedTicket] = useState(event.ticketTypes[0]);
-  const [quantity, setQuantity] = useState(1);
   const [lookingForBuddy, setLookingForBuddy] = useState(false);
   const [interestedBuddies, setInterestedBuddies] = useState([]);
-  const [showBuddyModal, setShowBuddyModal] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+
+  // Find the event based on the ID parameter
+  const currentEvent = events.find((event) => event.id.toString() === id);
+
+  // If event is not found, show error
+  if (!currentEvent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Event not found
+          </h2>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">
+            The event you're looking for doesn't exist or has been removed.
+          </p>
+          <Link
+            to="../events"
+            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+          >
+            Back to Events
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Define ticket types based on event price
+  const ticketTypes = [
+    {
+      name: "Regular",
+      price: currentEvent.price,
+      description: "Standard admission",
+    },
+    {
+      name: "VIP",
+      price: currentEvent.price * 2,
+      description: "Premium seating and exclusive perks",
+    },
+  ];
+
+  // Set selected ticket if not set
+  useEffect(() => {
+    if (!selectedTicket && ticketTypes.length > 0) {
+      setSelectedTicket(ticketTypes[0]);
+    }
+  }, [selectedTicket, ticketTypes]);
 
   const handleShare = async () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: event.title,
-          text: event.description,
+          title: currentEvent.title,
+          text: currentEvent.description,
           url: window.location.href,
         });
       } catch (error) {
@@ -94,9 +94,6 @@ export default function EventDetails() {
       matchScore: 85,
       contactPreference: "email",
       email: "alex.s@example.com",
-      socialMedia: {
-        instagram: "@alexsmith",
-      },
     },
     {
       id: 2,
@@ -105,30 +102,13 @@ export default function EventDetails() {
       matchScore: 75,
       contactPreference: "phone",
       phone: "+234 XXX XXXX XXX",
-      socialMedia: {
-        twitter: "@jordanlee",
-      },
-    },
-    {
-      id: 3,
-      name: "Sam Wilson",
-      interests: ["Sports", "Music"],
-      matchScore: 70,
-      contactPreference: "email",
-      email: "sam.w@example.com",
-      socialMedia: {
-        instagram: "@samwilson",
-        facebook: "samwilson",
-      },
     },
   ];
 
   const toggleLookingForBuddy = () => {
     setLookingForBuddy(!lookingForBuddy);
     if (!lookingForBuddy) {
-      // In a real implementation, this would fetch actual matches from the backend
       setInterestedBuddies(mockBuddies);
-      setShowBuddyModal(true);
     }
   };
 
@@ -137,34 +117,30 @@ export default function EventDetails() {
       {/* Event Banner */}
       <div className="relative h-96">
         <img
-          src={event.image}
-          alt={event.title}
+          src={currentEvent.image}
+          alt={currentEvent.title}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="text-center text-white">
-            <h1 className="text-4xl font-bold mb-4">{event.title}</h1>
+            <h1 className="text-4xl font-bold mb-4">{currentEvent.title}</h1>
             <div className="flex items-center justify-center gap-4">
               <span className="flex items-center">
                 <CalendarIcon className="h-5 w-5 mr-1" />
-                {event.date}
-              </span>
-              <span className="flex items-center">
-                <ClockIcon className="h-5 w-5 mr-1" />
-                {event.time}
+                {currentEvent.date}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
             <div className="prose dark:prose-invert max-w-none">
               <h2>About This Event</h2>
-              <p>{event.description}</p>
+              <p>{currentEvent.description}</p>
             </div>
 
             {/* Event Details */}
@@ -176,191 +152,123 @@ export default function EventDetails() {
                 <div className="flex items-center">
                   <MapPinIcon className="h-5 w-5 text-gray-400 mr-2" />
                   <span className="text-gray-600 dark:text-gray-300">
-                    {event.location}
+                    {currentEvent.venue}
                   </span>
                 </div>
                 <div className="flex items-center">
                   <CalendarIcon className="h-5 w-5 text-gray-400 mr-2" />
                   <span className="text-gray-600 dark:text-gray-300">
-                    {event.date}
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <ClockIcon className="h-5 w-5 text-gray-400 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">
-                    {event.time}
+                    {currentEvent.date}
                   </span>
                 </div>
                 <div className="flex items-center">
                   <UserIcon className="h-5 w-5 text-gray-400 mr-2" />
                   <span className="text-gray-600 dark:text-gray-300">
-                    {event.organizer.name}
+                    {currentEvent.category}
                   </span>
                 </div>
-              </div>
-            </div>
-
-            {/* Organizer Contact */}
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Contact Organizer
-              </h3>
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                <p className="text-gray-600 dark:text-gray-300">
-                  {event.organizer.name}
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {event.organizer.email}
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {event.organizer.contact}
-                </p>
               </div>
             </div>
           </div>
 
           {/* Ticket Purchase */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Get Tickets
-                </h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Get Tickets
+              </h3>
 
-                {/* Ticket Types */}
-                <div className="space-y-4 mb-6">
-                  {event.ticketTypes.map((ticket) => (
-                    <div
-                      key={ticket.name}
-                      className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                        selectedTicket.name === ticket.name
-                          ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20"
-                          : "border-gray-200 dark:border-gray-700 hover:border-primary-500"
-                      }`}
-                      onClick={() => setSelectedTicket(ticket)}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium text-gray-900 dark:text-white">
-                            {ticket.name}
-                          </h4>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {ticket.description}
-                          </p>
-                        </div>
-                        <span className="font-semibold text-primary-600 dark:text-primary-400">
-                          {ticket.price}
-                        </span>
+              {/* Ticket Types */}
+              <div className="space-y-4 mb-6">
+                {ticketTypes.map((ticket) => (
+                  <div
+                    key={ticket.name}
+                    className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+                      selectedTicket?.name === ticket.name
+                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                        : "border-gray-200 dark:border-gray-700 hover:border-blue-500"
+                    }`}
+                    onClick={() => setSelectedTicket(ticket)}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="font-medium text-gray-900 dark:text-white">
+                          {ticket.name}
+                        </h4>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {ticket.description}
+                        </p>
                       </div>
+                      <span className="font-semibold text-blue-600 dark:text-blue-400">
+                        ₦{ticket.price.toLocaleString()}
+                      </span>
                     </div>
-                  ))}
-                </div>
-
-                {/* Quantity Selector */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Quantity
-                  </label>
-                  <div className="flex items-center border rounded-lg">
-                    <button
-                      type="button"
-                      className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    >
-                      -
-                    </button>
-                    <span className="px-4 py-2 text-gray-900 dark:text-white">
-                      {quantity}
-                    </span>
-                    <button
-                      type="button"
-                      className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                      onClick={() => setQuantity(quantity + 1)}
-                    >
-                      +
-                    </button>
                   </div>
-                </div>
+                ))}
+              </div>
 
-                {/* Total Price */}
+              {/* Quantity Selector */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Quantity
+                </label>
+                <div className="flex items-center border rounded-lg">
+                  <button
+                    type="button"
+                    className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  >
+                    -
+                  </button>
+                  <span className="px-4 py-2 text-gray-900 dark:text-white">
+                    {quantity}
+                  </span>
+                  <button
+                    type="button"
+                    className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                    onClick={() => setQuantity(quantity + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Total Price */}
+              {selectedTicket && (
                 <div className="mb-6">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">
                       Total
                     </span>
                     <span className="text-xl font-semibold text-gray-900 dark:text-white">
-                      ₦
-                      {parseInt(selectedTicket.price.replace(/[^0-9]/g, "")) *
-                        quantity}
+                      ₦{(selectedTicket.price * quantity).toLocaleString()}
                     </span>
                   </div>
                 </div>
+              )}
 
-                {/* Action Buttons */}
-                <div className="space-y-4">
-                  <Link
-                    to={`tickets/${event.id}`}
-                    className="w-full inline-flex justify-center items-center rounded-md bg-primary-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
-                  >
-                    Buy Tickets
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={handleShare}
-                    className="w-full inline-flex justify-center items-center rounded-md bg-white dark:bg-gray-800 px-3.5 py-2.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-                  >
-                    <ShareIcon className="h-5 w-5 mr-2" />
-                    Share Event
-                  </button>
-                </div>
+              <div className="space-y-4">
+                <Link
+                  to={`../tickets/${currentEvent.id}`}
+                  className="w-full inline-flex justify-center items-center rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
+                >
+                  Buy Tickets
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="w-full inline-flex justify-center items-center rounded-md bg-white dark:bg-gray-800 px-3.5 py-2.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <ShareIcon className="h-5 w-5 mr-2" />
+                  Share Event
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Related Events */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
-            Related Events
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {event.relatedEvents.map((relatedEvent) => (
-              <motion.div
-                key={relatedEvent.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Link to={`events/${relatedEvent.id}`} className="group">
-                  <div className="relative">
-                    <img
-                      src={relatedEvent.image}
-                      alt={relatedEvent.title}
-                      className="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2] group-hover:opacity-75 transition-opacity"
-                    />
-                    <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10" />
-                  </div>
-                  <div className="mt-6">
-                    <h3 className="text-lg font-semibold leading-8 text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">
-                      {relatedEvent.title}
-                    </h3>
-                    <p className="mt-2 text-base leading-7 text-gray-600 dark:text-gray-300">
-                      {relatedEvent.date}
-                    </p>
-                    <div className="mt-4">
-                      <span className="text-sm font-medium text-primary-600 dark:text-primary-400">
-                        {relatedEvent.price}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
         {/* Event Buddy Feature */}
-        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <div className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <UsersIcon className="h-8 w-8 text-blue-500" />
@@ -388,8 +296,8 @@ export default function EventDetails() {
             </button>
           </div>
 
-          {/* Buddy Modal */}
-          {showBuddyModal && (
+          {/* Buddy List */}
+          {lookingForBuddy && (
             <div className="mt-6 space-y-4">
               <h4 className="text-md font-medium text-gray-900 dark:text-white">
                 Potential Event Buddies
@@ -416,7 +324,7 @@ export default function EventDetails() {
                       </div>
 
                       {/* Contact Information */}
-                      <div className="pt-3 border-t border-gray-200 dark:border-gray-600">
+                      <div>
                         <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">
                           Contact via:
                         </p>
@@ -437,48 +345,6 @@ export default function EventDetails() {
                           </a>
                         )}
                       </div>
-
-                      {/* Social Media Links */}
-                      {buddy.socialMedia && (
-                        <div className="flex gap-2 pt-2">
-                          {buddy.socialMedia.instagram && (
-                            <a
-                              href={`https://instagram.com/${buddy.socialMedia.instagram.replace(
-                                "@",
-                                ""
-                              )}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-pink-600 hover:text-pink-500 dark:text-pink-400"
-                            >
-                              Instagram
-                            </a>
-                          )}
-                          {buddy.socialMedia.twitter && (
-                            <a
-                              href={`https://twitter.com/${buddy.socialMedia.twitter.replace(
-                                "@",
-                                ""
-                              )}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:text-blue-500 dark:text-blue-400"
-                            >
-                              Twitter
-                            </a>
-                          )}
-                          {buddy.socialMedia.facebook && (
-                            <a
-                              href={`https://facebook.com/${buddy.socialMedia.facebook}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-800 hover:text-blue-700 dark:text-blue-300"
-                            >
-                              Facebook
-                            </a>
-                          )}
-                        </div>
-                      )}
                     </div>
                   </div>
                 ))}

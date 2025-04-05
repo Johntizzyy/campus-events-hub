@@ -42,6 +42,11 @@ import EventCheckIn from "./pages/EventCheckIn";
 
 const queryClient = new QueryClient();
 
+// Get the basename from the current URL
+const basename = window.location.pathname.includes("/campus-events-hub")
+  ? "/campus-events-hub"
+  : "";
+
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? <>{children}</> : <Navigate to="/signin" />;
@@ -52,7 +57,7 @@ function App() {
     <AuthProvider>
       <DarkModeProvider>
         <QueryClientProvider client={queryClient}>
-          <Router basename="/campus-events-hub">
+          <Router basename={basename}>
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<MainLayout />}>
@@ -63,7 +68,6 @@ function App() {
                 <Route path="help" element={<Help />} />
                 <Route path="terms" element={<Terms />} />
                 <Route path="pricing" element={<Pricing />} />
-                <Route path="events/:id" element={<EventDetails />} />
               </Route>
 
               {/* Protected Routes */}
@@ -82,6 +86,7 @@ function App() {
                 <Route path="post-event" element={<PostEvent />} />
                 <Route path="events" element={<Events />} />
                 <Route path="events/success" element={<Success />} />
+                <Route path="events/:id" element={<EventDetails />} />
                 <Route path="admin" element={<AdminDashboard />} />
                 <Route path="my-events" element={<MyEvents />} />
                 <Route path="my-tickets" element={<MyTickets />} />

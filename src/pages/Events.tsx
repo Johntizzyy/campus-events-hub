@@ -13,7 +13,7 @@ import {
 import { useDarkMode } from "../contexts/DarkModeContext";
 import { useAuth } from "../contexts/AuthContext";
 
-const events = [
+export const events = [
   {
     id: 1,
     title: "Annual Music Festival",
@@ -302,23 +302,21 @@ export default function Events() {
           {viewMode === "grid" ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredEvents.map((event) => (
-                <div
+                <Link
                   key={event.id}
+                  to={`/events/${event.id}`}
                   className={`group relative overflow-hidden rounded-lg ${
                     isDarkMode ? "bg-gray-800" : "bg-white"
-                  } shadow-lg transition-all duration-300 hover:shadow-xl`}
+                  } shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer`}
                 >
                   <div className="aspect-w-16 aspect-h-9">
                     <img
                       src={event.image}
-                      alt={event.title}
+                      alt={event.category}
                       className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h3 className="text-lg font-semibold text-white">
-                        {event.title}
-                      </h3>
                       <p className="mt-1 text-sm text-blue-100">{event.date}</p>
                     </div>
                   </div>
@@ -359,30 +357,8 @@ export default function Events() {
                         {event.ticketsSold} sold
                       </div>
                     </div>
-                    <div className="mt-4 flex space-x-2">
-                      <Link
-                        to={`/events/${event.id}`}
-                        className={`flex-1 inline-flex justify-center items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md ${
-                          isDarkMode
-                            ? "text-blue-400 hover:text-blue-300 bg-blue-900/20 hover:bg-blue-900/30"
-                            : "text-blue-600 hover:text-blue-500 bg-blue-50 hover:bg-blue-100"
-                        }`}
-                      >
-                        View Details
-                      </Link>
-                      <button
-                        type="button"
-                        className={`inline-flex justify-center items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md ${
-                          isDarkMode
-                            ? "text-gray-400 hover:text-gray-300 bg-gray-700/50 hover:bg-gray-700/70"
-                            : "text-gray-600 hover:text-gray-500 bg-gray-100 hover:bg-gray-200"
-                        }`}
-                      >
-                        Edit
-                      </button>
-                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
@@ -400,7 +376,7 @@ export default function Events() {
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:pl-6"
                     >
-                      Event
+                      Category
                     </th>
                     <th
                       scope="col"
@@ -418,12 +394,6 @@ export default function Events() {
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
                     >
-                      Category
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
-                    >
                       Price
                     </th>
                     <th
@@ -436,7 +406,7 @@ export default function Events() {
                       scope="col"
                       className="relative py-3.5 pl-3 pr-4 sm:pr-6"
                     >
-                      <span className="sr-only">Actions</span>
+                      <span className="sr-only">View</span>
                     </th>
                   </tr>
                 </thead>
@@ -446,14 +416,20 @@ export default function Events() {
                   }`}
                 >
                   {filteredEvents.map((event) => (
-                    <tr key={event.id}>
+                    <tr
+                      key={event.id}
+                      className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                    >
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                        <div className="flex items-center">
+                        <Link
+                          to={`/events/${event.id}`}
+                          className="flex items-center"
+                        >
                           <div className="h-10 w-10 flex-shrink-0">
                             <img
                               className="h-10 w-10 rounded-md object-cover"
                               src={event.image}
-                              alt=""
+                              alt={event.category}
                             />
                           </div>
                           <div className="ml-4">
@@ -462,19 +438,16 @@ export default function Events() {
                                 isDarkMode ? "text-white" : "text-gray-900"
                               }`}
                             >
-                              {event.title}
+                              {event.category}
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
                         {event.date}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
                         {event.venue}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
-                        {event.category}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
                         {event.price === 0
@@ -491,20 +464,10 @@ export default function Events() {
                             isDarkMode
                               ? "text-blue-400 hover:text-blue-300"
                               : "text-blue-600 hover:text-blue-500"
-                          } mr-4`}
-                        >
-                          View
-                        </Link>
-                        <button
-                          type="button"
-                          className={`${
-                            isDarkMode
-                              ? "text-gray-400 hover:text-gray-300"
-                              : "text-gray-600 hover:text-gray-500"
                           }`}
                         >
-                          Edit
-                        </button>
+                          View Details
+                        </Link>
                       </td>
                     </tr>
                   ))}
