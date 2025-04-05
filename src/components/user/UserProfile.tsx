@@ -1,4 +1,6 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSocial } from "../../contexts/SocialContext";
+import { UserProfile as UserProfileType } from "../../types/social";
 import { motion } from "framer-motion";
 import {
   UserCircleIcon,
@@ -7,46 +9,47 @@ import {
   KeyIcon,
 } from "@heroicons/react/24/outline";
 
-interface UserProfileData {
-  name: string;
-  email: string;
-  phone: string;
-  avatar: string | null;
-  bio: string;
-  university: string;
-  department: string;
-  preferences: {
-    emailNotifications: boolean;
-    pushNotifications: boolean;
-    eventReminders: boolean;
-  };
+interface UserProfileProps {
+  userId: string;
 }
 
-export default function UserProfile() {
+export const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
+  const { userProfile, loading, error, fetchUserProfile } = useSocial();
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState<UserProfileData>({
-    name: "John Doe",
-    email: "john@university.edu.ng",
-    phone: "+234 123 456 7890",
-    avatar: null,
-    bio: "Computer Science student passionate about tech events.",
-    university: "University of Lagos",
-    department: "Computer Science",
-    preferences: {
-      emailNotifications: true,
-      pushNotifications: true,
-      eventReminders: true,
-    },
-  });
+  const [editedProfile, setEditedProfile] = useState<Partial<UserProfileType>>(
+    {}
+  );
 
-  const handleSaveProfile = async () => {
-    // Add profile update logic here
-    setIsEditing(false);
+  useEffect(() => {
+    fetchUserProfile(userId);
+  }, [userId, fetchUserProfile]);
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    setEditedProfile(userProfile || {});
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Add image upload logic here
+  const handleSave = async () => {
+    try {
+      // TODO: Implement API call to update profile
+      // await api.put(`/users/${userId}`, editedProfile);
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update profile:", err);
+    }
   };
+
+  if (loading) {
+    return <div>Loading profile...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!userProfile) {
+    return <div>Profile not found</div>;
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -59,10 +62,10 @@ export default function UserProfile() {
         <div className="relative h-32 bg-primary-600">
           <div className="absolute -bottom-12 left-8">
             <div className="relative">
-              {profileData.avatar ? (
+              {userProfile.avatar ? (
                 <img
-                  src={profileData.avatar}
-                  alt={profileData.name}
+                  src={userProfile.avatar}
+                  alt={userProfile.username}
                   className="w-24 h-24 rounded-full border-4 border-white dark:border-gray-800"
                 />
               ) : (
@@ -71,18 +74,13 @@ export default function UserProfile() {
               {isEditing && (
                 <label className="absolute bottom-0 right-0 bg-white dark:bg-gray-700 rounded-full p-2 cursor-pointer">
                   <CameraIcon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                  />
+                  <input type="file" className="hidden" accept="image/*" />
                 </label>
               )}
             </div>
           </div>
           <button
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={handleEdit}
             className="absolute top-4 right-4 text-white"
           >
             <PencilIcon className="w-5 h-5" />
@@ -104,15 +102,85 @@ export default function UserProfile() {
                   </label>
                   <input
                     type="text"
-                    value={profileData.name}
+                    value={userProfile.username}
                     onChange={(e) =>
-                      setProfileData({ ...profileData, name: e.target.value })
+                      setEditedProfile({
+                        ...editedProfile,
+                        username: e.target.value,
+                      })
                     }
                     disabled={!isEditing}
                     className="input-field"
                   />
                 </div>
-                {/* Add similar fields for email, phone, university, department */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    value={userProfile.email}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        email: e.target.value,
+                      })
+                    }
+                    disabled={!isEditing}
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Phone
+                  </label>
+                  <input
+                    type="text"
+                    value={userProfile.phone}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        phone: e.target.value,
+                      })
+                    }
+                    disabled={!isEditing}
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    University
+                  </label>
+                  <input
+                    type="text"
+                    value={userProfile.university}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        university: e.target.value,
+                      })
+                    }
+                    disabled={!isEditing}
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Department
+                  </label>
+                  <input
+                    type="text"
+                    value={userProfile.department}
+                    onChange={(e) =>
+                      setEditedProfile({
+                        ...editedProfile,
+                        department: e.target.value,
+                      })
+                    }
+                    disabled={!isEditing}
+                    className="input-field"
+                  />
+                </div>
               </div>
             </div>
 
@@ -122,9 +190,9 @@ export default function UserProfile() {
                 Bio
               </label>
               <textarea
-                value={profileData.bio}
+                value={editedProfile.bio || userProfile.bio || ""}
                 onChange={(e) =>
-                  setProfileData({ ...profileData, bio: e.target.value })
+                  setEditedProfile({ ...editedProfile, bio: e.target.value })
                 }
                 disabled={!isEditing}
                 rows={4}
@@ -132,37 +200,90 @@ export default function UserProfile() {
               />
             </div>
 
-            {/* Preferences */}
+            {/* Interests */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                Notification Preferences
+                Interests
               </h3>
               <div className="space-y-4">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="emailNotifications"
-                    checked={profileData.preferences.emailNotifications}
-                    onChange={(e) =>
-                      setProfileData({
-                        ...profileData,
-                        preferences: {
-                          ...profileData.preferences,
-                          emailNotifications: e.target.checked,
-                        },
-                      })
-                    }
-                    disabled={!isEditing}
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                  />
-                  <label
-                    htmlFor="emailNotifications"
-                    className="ml-3 text-sm text-gray-700 dark:text-gray-300"
+                {userProfile.interests.map((interest, index) => (
+                  <div key={index} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`interest-${index}`}
+                      checked={
+                        editedProfile.interests?.includes(interest) || false
+                      }
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setEditedProfile({
+                            ...editedProfile,
+                            interests: [
+                              ...(editedProfile.interests || []),
+                              interest,
+                            ],
+                          });
+                        } else {
+                          setEditedProfile({
+                            ...editedProfile,
+                            interests:
+                              editedProfile.interests?.filter(
+                                (i) => i !== interest
+                              ) || [],
+                          });
+                        }
+                      }}
+                      disabled={!isEditing}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                    <label
+                      htmlFor={`interest-${index}`}
+                      className="ml-3 text-sm text-gray-700 dark:text-gray-300"
+                    >
+                      {interest}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Event History */}
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                Event History
+              </h3>
+              <div className="space-y-2">
+                {userProfile.eventHistory.map((eventId, index) => (
+                  <div
+                    key={index}
+                    className="p-3 bg-gray-50 rounded-md hover:bg-gray-100"
                   >
-                    Email Notifications
-                  </label>
-                </div>
-                {/* Add similar toggles for other preferences */}
+                    Event ID: {eventId}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Reviews */}
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                Reviews
+              </h3>
+              <div className="space-y-4">
+                {userProfile.reviews.map((review, index) => (
+                  <div key={index} className="p-4 bg-gray-50 rounded-md">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <span className="text-yellow-400">★</span>
+                        <span className="ml-1">{review.rating}/5</span>
+                      </div>
+                      <span className="text-sm text-gray-500">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-gray-700">{review.comment}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -183,7 +304,7 @@ export default function UserProfile() {
             {/* Save Button */}
             {isEditing && (
               <div className="flex justify-end">
-                <button onClick={handleSaveProfile} className="btn-primary">
+                <button onClick={handleSave} className="btn-primary">
                   Save Changes
                 </button>
               </div>
@@ -193,4 +314,4 @@ export default function UserProfile() {
       </motion.div>
     </div>
   );
-}
+};

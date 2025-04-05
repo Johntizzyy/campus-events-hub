@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import React from "react";
 
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ShareIcon,
@@ -11,19 +11,29 @@ import {
   UserIcon,
   UsersIcon,
   ChatBubbleLeftRightIcon,
+  TicketIcon,
+  StarIcon,
+  MegaphoneIcon,
 } from "@heroicons/react/24/outline";
 import { useAuth } from "../contexts/AuthContext";
 
 // Import events data
 import { events } from "./Events";
 
+// Import new components
+import { EventReviews } from "../components/events/EventReviews";
+import { TicketTiers } from "../components/events/TicketTiers";
+import { EventAnnouncements } from "../components/events/EventAnnouncements";
+
 export default function EventDetails() {
   const { id } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [lookingForBuddy, setLookingForBuddy] = useState(false);
   const [interestedBuddies, setInterestedBuddies] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState("details");
 
   // Find the event based on the ID parameter
   const currentEvent = events.find((event) => event.id.toString() === id);
@@ -112,6 +122,11 @@ export default function EventDetails() {
     }
   };
 
+  // Handle tab navigation
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
+  };
+
   return (
     <div className="bg-white dark:bg-gray-900">
       {/* Event Banner */}
@@ -135,137 +150,207 @@ export default function EventDetails() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            <div className="prose dark:prose-invert max-w-none">
-              <h2>About This Event</h2>
-              <p>{currentEvent.description}</p>
-            </div>
+        {/* Tabs Navigation */}
+        <div className="border-b border-gray-200 mb-8">
+          <nav className="-mb-px flex space-x-8">
+            <button
+              onClick={() => handleTabClick("details")}
+              className={`${
+                activeTab === "details"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+            >
+              Details
+            </button>
+            <button
+              onClick={() => handleTabClick("tickets")}
+              className={`${
+                activeTab === "tickets"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center`}
+            >
+              <TicketIcon className="h-4 w-4 mr-1" />
+              Tickets
+            </button>
+            <button
+              onClick={() => handleTabClick("reviews")}
+              className={`${
+                activeTab === "reviews"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center`}
+            >
+              <StarIcon className="h-4 w-4 mr-1" />
+              Reviews
+            </button>
+            <button
+              onClick={() => handleTabClick("announcements")}
+              className={`${
+                activeTab === "announcements"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center`}
+            >
+              <MegaphoneIcon className="h-4 w-4 mr-1" />
+              Announcements
+            </button>
+          </nav>
+        </div>
 
-            {/* Event Details */}
-            <div className="mt-8 space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Event Details
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <MapPinIcon className="h-5 w-5 text-gray-400 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">
-                    {currentEvent.venue}
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <CalendarIcon className="h-5 w-5 text-gray-400 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">
-                    {currentEvent.date}
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <UserIcon className="h-5 w-5 text-gray-400 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">
-                    {currentEvent.category}
-                  </span>
+        {/* Tab Content */}
+        {activeTab === "details" && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Content */}
+            <div className="lg:col-span-2">
+              <div className="prose dark:prose-invert max-w-none">
+                <h2>About This Event</h2>
+                <p>{currentEvent.description}</p>
+              </div>
+
+              {/* Event Details */}
+              <div className="mt-8 space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Event Details
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center">
+                    <MapPinIcon className="h-5 w-5 text-gray-400 mr-2" />
+                    <span className="text-gray-600 dark:text-gray-300">
+                      {currentEvent.venue}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <CalendarIcon className="h-5 w-5 text-gray-400 mr-2" />
+                    <span className="text-gray-600 dark:text-gray-300">
+                      {currentEvent.date}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <UserIcon className="h-5 w-5 text-gray-400 mr-2" />
+                    <span className="text-gray-600 dark:text-gray-300">
+                      {currentEvent.category}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Ticket Purchase */}
-          <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Get Tickets
-              </h3>
+            {/* Ticket Purchase */}
+            <div className="lg:col-span-1">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Get Tickets
+                </h3>
 
-              {/* Ticket Types */}
-              <div className="space-y-4 mb-6">
-                {ticketTypes.map((ticket) => (
-                  <div
-                    key={ticket.name}
-                    className={`p-4 rounded-lg border cursor-pointer transition-colors ${
-                      selectedTicket?.name === ticket.name
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-blue-500"
-                    }`}
-                    onClick={() => setSelectedTicket(ticket)}
-                  >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="font-medium text-gray-900 dark:text-white">
-                          {ticket.name}
-                        </h4>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {ticket.description}
-                        </p>
+                {/* Ticket Types */}
+                <div className="space-y-4 mb-6">
+                  {ticketTypes.map((ticket) => (
+                    <div
+                      key={ticket.name}
+                      className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+                        selectedTicket?.name === ticket.name
+                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                          : "border-gray-200 dark:border-gray-700 hover:border-blue-500"
+                      }`}
+                      onClick={() => setSelectedTicket(ticket)}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-medium text-gray-900 dark:text-white">
+                            {ticket.name}
+                          </h4>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {ticket.description}
+                          </p>
+                        </div>
+                        <span className="font-semibold text-blue-600 dark:text-blue-400">
+                          ₦{ticket.price.toLocaleString()}
+                        </span>
                       </div>
-                      <span className="font-semibold text-blue-600 dark:text-blue-400">
-                        ₦{ticket.price.toLocaleString()}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Quantity Selector */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Quantity
+                  </label>
+                  <div className="flex items-center border rounded-lg">
+                    <button
+                      type="button"
+                      className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    >
+                      -
+                    </button>
+                    <span className="px-4 py-2 text-gray-900 dark:text-white">
+                      {quantity}
+                    </span>
+                    <button
+                      type="button"
+                      className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                      onClick={() => setQuantity(quantity + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* Total Price */}
+                {selectedTicket && (
+                  <div className="mb-6">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Total
+                      </span>
+                      <span className="text-xl font-semibold text-gray-900 dark:text-white">
+                        ₦{(selectedTicket.price * quantity).toLocaleString()}
                       </span>
                     </div>
                   </div>
-                ))}
-              </div>
+                )}
 
-              {/* Quantity Selector */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Quantity
-                </label>
-                <div className="flex items-center border rounded-lg">
+                <div className="space-y-4">
+                  <Link
+                    to={`../tickets/${currentEvent.id}`}
+                    className="w-full inline-flex justify-center items-center rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
+                  >
+                    Buy Tickets
+                  </Link>
                   <button
                     type="button"
-                    className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    onClick={handleShare}
+                    className="w-full inline-flex justify-center items-center rounded-md bg-white dark:bg-gray-800 px-3.5 py-2.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
                   >
-                    -
-                  </button>
-                  <span className="px-4 py-2 text-gray-900 dark:text-white">
-                    {quantity}
-                  </span>
-                  <button
-                    type="button"
-                    className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                    onClick={() => setQuantity(quantity + 1)}
-                  >
-                    +
+                    <ShareIcon className="h-5 w-5 mr-2" />
+                    Share Event
                   </button>
                 </div>
-              </div>
-
-              {/* Total Price */}
-              {selectedTicket && (
-                <div className="mb-6">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Total
-                    </span>
-                    <span className="text-xl font-semibold text-gray-900 dark:text-white">
-                      ₦{(selectedTicket.price * quantity).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-4">
-                <Link
-                  to={`../tickets/${currentEvent.id}`}
-                  className="w-full inline-flex justify-center items-center rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
-                >
-                  Buy Tickets
-                </Link>
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className="w-full inline-flex justify-center items-center rounded-md bg-white dark:bg-gray-800 px-3.5 py-2.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  <ShareIcon className="h-5 w-5 mr-2" />
-                  Share Event
-                </button>
               </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {activeTab === "tickets" && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <TicketTiers eventId={id!} />
+          </div>
+        )}
+
+        {activeTab === "reviews" && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <EventReviews eventId={id!} />
+          </div>
+        )}
+
+        {activeTab === "announcements" && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <EventAnnouncements eventId={id!} isOrganizer={false} />
+          </div>
+        )}
 
         {/* Event Buddy Feature */}
         <div className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">

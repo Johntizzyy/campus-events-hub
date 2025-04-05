@@ -304,7 +304,7 @@ export default function MainLayout() {
           </div>
         </div>
       </footer> */}
-            <footer className="relative mt-24">
+      <footer className="relative mt-24">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1531685250784-7569952593d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
@@ -486,7 +486,6 @@ export default function MainLayout() {
           </div>
         </div>
       </footer>
-
     </div>
   );
 }
