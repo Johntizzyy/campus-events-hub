@@ -44,6 +44,56 @@ const mockEvents = [
     image:
       "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
   },
+  {
+    id: 4,
+    title: "Art Exhibition",
+    date: "2024-04-28",
+    venue: "Art Gallery",
+    price: 1500,
+    category: "Art",
+    image:
+      "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+  },
+  {
+    id: 5,
+    title: "Dance Competition",
+    date: "2024-05-01",
+    venue: "University Hall",
+    price: 3000,
+    category: "Music",
+    image:
+      "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+  },
+  {
+    id: 6,
+    title: "Science Fair",
+    date: "2024-05-05",
+    venue: "Science Complex",
+    price: 0,
+    category: "Academic",
+    image:
+      "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+  },
+  {
+    id: 7,
+    title: "Graduation Party",
+    date: "2024-05-10",
+    venue: "Main Campus",
+    price: 4000,
+    category: "Party",
+    image:
+      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+  },
+  {
+    id: 8,
+    title: "Entrepreneurship Workshop",
+    date: "2024-05-15",
+    venue: "Business School",
+    price: 2500,
+    category: "Career",
+    image:
+      "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+  },
 ];
 
 export default function EventListings() {
@@ -140,7 +190,7 @@ export default function EventListings() {
         </div>
 
         {/* Events Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredEvents.map((event) => (
             <Link to={`/events/${event.id}`} key={event.id} className="group">
               <div className="aspect-w-16 aspect-h-9 mb-4">

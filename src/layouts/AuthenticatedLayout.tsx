@@ -31,6 +31,7 @@ export default function AuthenticatedLayout({
 
   const navigation = [
     { name: "Home", href: "/home", icon: HomeIcon },
+    { name: "Events", href: "/events", icon: CalendarIcon },
     { name: "My Events", href: "/my-events", icon: TicketIcon },
     { name: "My Tickets", href: "/my-tickets", icon: QrCodeIcon },
     { name: "Earnings", href: "/earnings", icon: CurrencyDollarIcon },

@@ -63,7 +63,6 @@ function App() {
                 <Route path="help" element={<Help />} />
                 <Route path="terms" element={<Terms />} />
                 <Route path="pricing" element={<Pricing />} />
-                <Route path="events" element={<EventListings />} />
                 <Route path="events/:id" element={<EventDetails />} />
               </Route>
 
@@ -81,6 +80,7 @@ function App() {
                 <Route path="dashboard" element={<UserDashboard />} />
                 <Route path="tickets/:eventId" element={<TicketPurchase />} />
                 <Route path="post-event" element={<PostEvent />} />
+                <Route path="events" element={<Events />} />
                 <Route path="events/success" element={<Success />} />
                 <Route path="admin" element={<AdminDashboard />} />
                 <Route path="my-events" element={<MyEvents />} />
