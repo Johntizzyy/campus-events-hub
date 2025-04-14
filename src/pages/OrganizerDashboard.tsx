@@ -35,7 +35,7 @@ export default function OrganizerDashboard() {
           Organizer Dashboard
         </h1>
         <Link
-          to="/post-event"
+          to="/organizer/events/create"
           className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
         >
           Create New Event
@@ -153,19 +153,19 @@ export default function OrganizerDashboard() {
           </h3>
           <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             <Link
-              to="/post-event"
+              to="/organizer/events/create"
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
             >
               Create New Event
             </Link>
             <Link
-              to="/my-events"
+              to="/organizer/my-events"
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
             >
               Manage Events
             </Link>
             <Link
-              to="/earnings"
+              to="/organizer/earnings"
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
             >
               View Earnings

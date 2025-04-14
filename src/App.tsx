@@ -28,6 +28,8 @@ import MyTickets from "./pages/MyTickets";
 import Earnings from "./pages/Earnings";
 import Promotions from "./pages/Promotions";
 import Messages from "./pages/Messages";
+import CreateEvent from "./pages/CreateEvent";
+import Settings from "./pages/Settings";
 
 // Contexts
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
@@ -45,6 +47,17 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   // Check if user exists and has the correct type for the route
   if (!user) {
     return <Navigate to="/signin" replace />;
+  }
+
+  // Get the current path
+  const path = window.location.hash.substring(1); // Remove the '#' from the hash
+
+  // Redirect users if they try to access the wrong layout's routes
+  if (user.userType === "attendee" && path.includes("/organizer")) {
+    return <Navigate to="/attendee-dashboard" replace />;
+  }
+  if (user.userType === "organizer" && path.includes("/attendee")) {
+    return <Navigate to="/organizer-dashboard" replace />;
   }
 
   return <>{children}</>;
@@ -89,11 +102,11 @@ function AppRoutes() {
         }
       >
         <Route path="/attendee-dashboard" element={<AttendeeDashboard />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/events/:id" element={<EventDetails />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/messages" element={<Messages />} />
-        <Route path="/my-tickets" element={<MyTickets />} />
+        <Route path="/attendee/events" element={<Events />} />
+        <Route path="/attendee/events/:id" element={<EventDetails />} />
+        <Route path="/attendee/profile" element={<Profile />} />
+        <Route path="/attendee/messages" element={<Messages />} />
+        <Route path="/attendee/my-tickets" element={<MyTickets />} />
       </Route>
 
       {/* Organizer Protected Routes */}
@@ -107,13 +120,15 @@ function AppRoutes() {
         }
       >
         <Route path="/organizer-dashboard" element={<OrganizerDashboard />} />
-        <Route path="/my-events" element={<MyEvents />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/events/:id" element={<EventDetails />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/messages" element={<Messages />} />
-        <Route path="/earnings" element={<Earnings />} />
-        <Route path="/promotions" element={<Promotions />} />
+        <Route path="/organizer/my-events" element={<MyEvents />} />
+        <Route path="/organizer/events" element={<Events />} />
+        <Route path="/organizer/events/create" element={<CreateEvent />} />
+        <Route path="/organizer/events/:id" element={<EventDetails />} />
+        <Route path="/organizer/profile" element={<Profile />} />
+        <Route path="/organizer/messages" element={<Messages />} />
+        <Route path="/organizer/earnings" element={<Earnings />} />
+        <Route path="/organizer/promotions" element={<Promotions />} />
+        <Route path="/organizer/settings" element={<Settings />} />
       </Route>
     </Routes>
   );

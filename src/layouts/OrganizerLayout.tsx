@@ -14,12 +14,17 @@ import {
 
 const organizerNavigation = [
   { name: "Dashboard", href: "/organizer-dashboard", icon: HomeIcon },
-  { name: "Events", href: "/events", icon: CalendarIcon },
-  { name: "My Events", href: "/my-events", icon: TicketIcon },
-  { name: "Earnings", href: "/earnings", icon: ChartBarIcon },
-  { name: "Promotions", href: "/promotions", icon: UserGroupIcon },
-  { name: "Settings", href: "/organizer-settings", icon: Cog6ToothIcon },
-  { name: "Profile", href: "/profile", icon: UserCircleIcon },
+  { name: "My Events", href: "/organizer/my-events", icon: TicketIcon },
+  {
+    name: "Create Event",
+    href: "/organizer/events/create",
+    icon: CalendarIcon,
+  },
+  { name: "Events", href: "/organizer/events", icon: CalendarIcon },
+  { name: "Earnings", href: "/organizer/earnings", icon: ChartBarIcon },
+  { name: "Promotions", href: "/organizer/promotions", icon: UserGroupIcon },
+  { name: "Settings", href: "/organizer/settings", icon: Cog6ToothIcon },
+  { name: "Profile", href: "/organizer/profile", icon: UserCircleIcon },
 ];
 
 export default function OrganizerLayout() {

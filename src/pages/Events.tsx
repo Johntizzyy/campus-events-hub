@@ -186,15 +186,15 @@ export default function Events() {
             </div>
             <div className="mt-4 md:mt-0 flex space-x-3">
               <Link
-                to="/post-event"
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                to="/organizer/events/create"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
               >
                 <PlusIcon className="h-5 w-5 mr-2" />
                 Create Event
               </Link>
               <button
                 type="button"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
               >
                 <ChartBarIcon className="h-5 w-5 mr-2" />
                 Analytics
@@ -300,27 +300,34 @@ export default function Events() {
 
           {/* Events Grid/List */}
           {viewMode === "grid" ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 mt-8">
               {filteredEvents.map((event) => (
                 <Link
                   key={event.id}
-                  to={`/events/${event.id}`}
+                  to={
+                    user?.userType === "organizer"
+                      ? `/organizer/events/${event.id}`
+                      : `/attendee/events/${event.id}`
+                  }
                   className={`group relative overflow-hidden rounded-lg ${
                     isDarkMode ? "bg-gray-800" : "bg-white"
-                  } shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer`}
+                  } shadow-lg transition-all duration-300 hover:shadow-xl`}
                 >
                   <div className="aspect-w-16 aspect-h-9">
                     <img
                       src={event.image}
-                      alt={event.category}
-                      className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      alt={event.title}
+                      className="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-xl font-semibold text-white">
+                        {event.title}
+                      </h3>
                       <p className="mt-1 text-sm text-blue-100">{event.date}</p>
                     </div>
                   </div>
-                  <div className="p-4">
+                  <div className="p-6">
                     <div className="flex items-center justify-between">
                       <span
                         className={`text-sm font-medium ${
@@ -329,11 +336,7 @@ export default function Events() {
                       >
                         {event.category}
                       </span>
-                      <span
-                        className={`text-lg font-bold ${
-                          isDarkMode ? "text-blue-400" : "text-blue-600"
-                        }`}
-                      >
+                      <span className="text-lg font-bold text-primary-600">
                         {event.price === 0
                           ? "Free"
                           : `₦${event.price.toLocaleString()}`}
@@ -347,14 +350,46 @@ export default function Events() {
                       <MapPinIcon className="mr-1 h-4 w-4" />
                       {event.venue}
                     </div>
-                    <div className="mt-4 flex items-center justify-between">
-                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                        <UserGroupIcon className="mr-1 h-4 w-4" />
-                        {event.attendees} attendees
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                      <div
+                        className={`rounded-lg ${
+                          isDarkMode ? "bg-gray-700" : "bg-gray-50"
+                        } p-4`}
+                      >
+                        <p
+                          className={`text-sm font-medium ${
+                            isDarkMode ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        >
+                          Attendees
+                        </p>
+                        <p
+                          className={`mt-1 text-2xl font-semibold ${
+                            isDarkMode ? "text-white" : "text-gray-900"
+                          }`}
+                        >
+                          {event.attendees}
+                        </p>
                       </div>
-                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                        <CurrencyDollarIcon className="mr-1 h-4 w-4" />
-                        {event.ticketsSold} sold
+                      <div
+                        className={`rounded-lg ${
+                          isDarkMode ? "bg-gray-700" : "bg-gray-50"
+                        } p-4`}
+                      >
+                        <p
+                          className={`text-sm font-medium ${
+                            isDarkMode ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        >
+                          Tickets Sold
+                        </p>
+                        <p
+                          className={`mt-1 text-2xl font-semibold ${
+                            isDarkMode ? "text-white" : "text-gray-900"
+                          }`}
+                        >
+                          {event.ticketsSold}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -422,14 +457,18 @@ export default function Events() {
                     >
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                         <Link
-                          to={`/events/${event.id}`}
+                          to={
+                            user?.userType === "organizer"
+                              ? `/organizer/events/${event.id}`
+                              : `/attendee/events/${event.id}`
+                          }
                           className="flex items-center"
                         >
                           <div className="h-10 w-10 flex-shrink-0">
                             <img
                               className="h-10 w-10 rounded-md object-cover"
                               src={event.image}
-                              alt={event.category}
+                              alt={event.title}
                             />
                           </div>
                           <div className="ml-4">
@@ -438,7 +477,7 @@ export default function Events() {
                                 isDarkMode ? "text-white" : "text-gray-900"
                               }`}
                             >
-                              {event.category}
+                              {event.title}
                             </div>
                           </div>
                         </Link>
@@ -459,7 +498,11 @@ export default function Events() {
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <Link
-                          to={`/events/${event.id}`}
+                          to={
+                            user?.userType === "organizer"
+                              ? `/organizer/events/${event.id}`
+                              : `/attendee/events/${event.id}`
+                          }
                           className={`${
                             isDarkMode
                               ? "text-blue-400 hover:text-blue-300"

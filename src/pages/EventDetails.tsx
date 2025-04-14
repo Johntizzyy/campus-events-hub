@@ -14,8 +14,10 @@ import {
   TicketIcon,
   StarIcon,
   MegaphoneIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { useAuth } from "../contexts/AuthContext";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 // Import events data
 import { events } from "./Events";
@@ -29,6 +31,7 @@ export default function EventDetails() {
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { isDarkMode } = useDarkMode();
   const [lookingForBuddy, setLookingForBuddy] = useState(false);
   const [interestedBuddies, setInterestedBuddies] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
@@ -127,29 +130,169 @@ export default function EventDetails() {
     setActiveTab(tab);
   };
 
+  const handleBuyTickets = () => {
+    // TODO: Implement ticket purchase logic
+    console.log("Buying tickets:", { eventId: currentEvent.id, quantity });
+  };
+
   return (
-    <div className="bg-white dark:bg-gray-900">
-      {/* Event Banner */}
-      <div className="relative h-96">
-        <img
-          src={currentEvent.image}
-          alt={currentEvent.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="text-center text-white">
-            <h1 className="text-4xl font-bold mb-4">{currentEvent.title}</h1>
-            <div className="flex items-center justify-center gap-4">
-              <span className="flex items-center">
-                <CalendarIcon className="h-5 w-5 mr-1" />
-                {currentEvent.date}
-              </span>
+    <div
+      className={`min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+          {/* Event Image */}
+          <div className="relative h-96">
+            <img
+              src={currentEvent.image}
+              alt={currentEvent.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-50" />
+            <div className="absolute bottom-0 left-0 right-0 p-6">
+              <h1 className="text-4xl font-bold text-white mb-2">
+                {currentEvent.title}
+              </h1>
+              <div className="flex items-center text-white space-x-4">
+                <div className="flex items-center">
+                  <CalendarIcon className="h-5 w-5 mr-2" />
+                  {currentEvent.date}
+                </div>
+                <div className="flex items-center">
+                  <ClockIcon className="h-5 w-5 mr-2" />
+                  7:00 PM
+                </div>
+                <div className="flex items-center">
+                  <MapPinIcon className="h-5 w-5 mr-2" />
+                  {currentEvent.venue}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-6">
+            {/* Event Details */}
+            <div className="lg:col-span-2 space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  About This Event
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {currentEvent.description}
+                </p>
+              </div>
+
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Event Details
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div
+                    className={`p-4 rounded-lg ${
+                      isDarkMode ? "bg-gray-700" : "bg-gray-50"
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <UserGroupIcon className="h-6 w-6 text-primary-600 mr-2" />
+                      <div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Total Attendees
+                        </p>
+                        <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                          {currentEvent.attendees}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`p-4 rounded-lg ${
+                      isDarkMode ? "bg-gray-700" : "bg-gray-50"
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <TicketIcon className="h-6 w-6 text-primary-600 mr-2" />
+                      <div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Tickets Sold
+                        </p>
+                        <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                          {currentEvent.ticketsSold}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ticket Purchase */}
+            <div className="lg:col-span-1">
+              <div
+                className={`p-6 rounded-lg ${
+                  isDarkMode ? "bg-gray-700" : "bg-gray-50"
+                }`}
+              >
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                  Get Tickets
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-2xl font-bold text-primary-600">
+                      {currentEvent.price === 0
+                        ? "Free"
+                        : `₦${currentEvent.price.toLocaleString()}`}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      per ticket
+                    </p>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="quantity"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      Quantity
+                    </label>
+                    <select
+                      id="quantity"
+                      value={quantity}
+                      onChange={(e) => setQuantity(Number(e.target.value))}
+                      className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-primary-500 focus:outline-none focus:ring-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white sm:text-sm"
+                    >
+                      {[1, 2, 3, 4, 5].map((num) => (
+                        <option key={num} value={num}>
+                          {num} {num === 1 ? "ticket" : "tickets"}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Total Price
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                      {currentEvent.price === 0
+                        ? "Free"
+                        : `₦${(
+                            currentEvent.price * quantity
+                          ).toLocaleString()}`}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={handleBuyTickets}
+                    className="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                  >
+                    {currentEvent.price === 0 ? "Register Now" : "Buy Tickets"}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Tabs Navigation */}
         <div className="border-b border-gray-200 mb-8">
           <nav className="-mb-px flex space-x-8">
