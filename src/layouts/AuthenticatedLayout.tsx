@@ -28,7 +28,6 @@ export default function AuthenticatedLayout({
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-
   const navigation = [
     { name: "Home", href: "/home", icon: HomeIcon },
     { name: "Events", href: "/events", icon: CalendarIcon },

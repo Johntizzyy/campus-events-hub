@@ -12,9 +12,9 @@ const DarkModeContext = createContext<DarkModeContextType | undefined>(
 export function DarkModeProvider({ children }: { children: React.ReactNode }) {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // Check if user has a theme preference in localStorage
-    const savedTheme = localStorage.getItem("theme");
+    const savedTheme = localStorage.getItem("darkMode");
     if (savedTheme) {
-      return savedTheme === "dark";
+      return savedTheme === "true";
     }
     // Check system preference
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -22,7 +22,7 @@ export function DarkModeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Update localStorage and document class when theme changes
-    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+    localStorage.setItem("darkMode", String(isDarkMode));
     document.documentElement.classList.toggle("dark", isDarkMode);
   }, [isDarkMode]);
 

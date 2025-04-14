@@ -4,7 +4,8 @@ interface User {
   id: string;
   name: string;
   email: string;
-  photoUrl?: string;
+  photoUrl: string;
+  userType: "attendee" | "organizer";
 }
 
 interface AuthContextType {
@@ -12,7 +13,12 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  signup: (name: string, email: string, password: string) => Promise<void>;
+  signup: (
+    name: string,
+    email: string,
+    password: string,
+    userType: "attendee" | "organizer"
+  ) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -30,20 +36,29 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem("isAuthenticated") === "true";
+  });
 
   const login = async (email: string, password: string) => {
     try {
       // Add your login logic here
       // For now, we'll just simulate a successful login
-      setUser({
+      const newUser = {
         id: "1",
         name: "Test User",
         email: email,
         photoUrl: "https://ui-avatars.com/api/?name=Test+User",
-      });
+        userType: "attendee", // Default to attendee for now
+      };
+      setUser(newUser);
       setIsAuthenticated(true);
+      localStorage.setItem("user", JSON.stringify(newUser));
+      localStorage.setItem("isAuthenticated", "true");
     } catch (error) {
       throw error;
     }
@@ -52,21 +67,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
+    localStorage.removeItem("user");
+    localStorage.removeItem("isAuthenticated");
   };
 
-  const signup = async (name: string, email: string, password: string) => {
+  const signup = async (
+    name: string,
+    email: string,
+    password: string,
+    userType: "attendee" | "organizer"
+  ) => {
     try {
       // Add your signup logic here
       // For now, we'll just simulate a successful signup
-      setUser({
+      const newUser = {
         id: "1",
         name: name,
         email: email,
         photoUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(
           name
         )}`,
-      });
+        userType: userType,
+      };
+      setUser(newUser);
       setIsAuthenticated(true);
+      localStorage.setItem("user", JSON.stringify(newUser));
+      localStorage.setItem("isAuthenticated", "true");
     } catch (error) {
       throw error;
     }

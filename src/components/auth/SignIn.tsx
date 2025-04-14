@@ -18,7 +18,7 @@ export default function SignIn() {
     e.preventDefault();
     try {
       await login(formData.email, formData.password);
-      navigate("/home");
+      navigate("/");
     } catch (err) {
       setError("Invalid email or password");
     }

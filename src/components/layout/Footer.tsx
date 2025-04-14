@@ -51,7 +51,7 @@ export const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <ul className="space-y-2 text-gray-400">
               <li>Email: support@campuseventshub.com</li>
-              <li>Phone: +234 123 456 7890</li>
+              <li>Phone: +234 814 902 6505 </li>
             </ul>
           </div>
         </div>
