@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 const attendeeNavigation = [
-  { name: "Home", href: "/attendee", icon: HomeIcon },
+  { name: "Home", href: "/attendee-dashboard", icon: HomeIcon },
   { name: "Events", href: "/attendee/events", icon: CalendarIcon },
   { name: "My Tickets", href: "/attendee/my-tickets", icon: TicketIcon },
   { name: "Profile", href: "/attendee/profile", icon: UserCircleIcon },

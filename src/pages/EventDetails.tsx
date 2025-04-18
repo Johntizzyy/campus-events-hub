@@ -26,6 +26,7 @@ import { events } from "./Events";
 import { EventReviews } from "../components/events/EventReviews";
 import { TicketTiers } from "../components/events/TicketTiers";
 import { EventAnnouncements } from "../components/events/EventAnnouncements";
+import PaymentModal from "../components/payment/PaymentModal";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -37,6 +38,7 @@ export default function EventDetails() {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("details");
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   // Find the event based on the ID parameter
   const currentEvent = events.find((event) => event.id.toString() === id);
@@ -84,16 +86,34 @@ export default function EventDetails() {
     }
   }, [selectedTicket, ticketTypes]);
 
+  const handleBuyTickets = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    setIsPaymentModalOpen(true);
+  };
+
   const handleShare = async () => {
+    const shareData = {
+      title: currentEvent.title,
+      text: `Check out ${currentEvent.title} at ${currentEvent.venue} on ${currentEvent.date}!`,
+      url: window.location.href,
+    };
+
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: currentEvent.title,
-          text: currentEvent.description,
-          url: window.location.href,
-        });
+        await navigator.share(shareData);
       } catch (error) {
         console.error("Error sharing:", error);
+      }
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+      } catch (error) {
+        console.error("Error copying to clipboard:", error);
       }
     }
   };
@@ -128,11 +148,6 @@ export default function EventDetails() {
   // Handle tab navigation
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
-  };
-
-  const handleBuyTickets = () => {
-    // TODO: Implement ticket purchase logic
-    console.log("Buying tickets:", { eventId: currentEvent.id, quantity });
   };
 
   return (
@@ -581,6 +596,16 @@ export default function EventDetails() {
           )}
         </div>
       </div>
+
+      {/* Add PaymentModal */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        closeModal={() => setIsPaymentModalOpen(false)}
+        amount={selectedTicket ? selectedTicket.price * quantity : 0}
+        eventTitle={currentEvent.title}
+        quantity={quantity}
+        email={user?.email || ""}
+      />
     </div>
   );
 }
